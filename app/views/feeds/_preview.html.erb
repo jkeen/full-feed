@@ -1,0 +1,6 @@
+<p class="feed_url">
+  Everything below look ok?  Here's the <%= link_to("full feed", formatted_load_feeds_url(:format => :rss, :selectors => params[:selectors], :url => params[:url])) %>. 
+</p>
+
+<h3 class="entry_title"><%= preview.title %></h3>
+<div class="entry_results"><%= preview.summary %></div>
