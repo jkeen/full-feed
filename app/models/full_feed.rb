@@ -18,7 +18,7 @@ class FullFeed < ActiveRecord::Base
       case response
         when Net::HTTPOK
           case response.content_type
-            when "text/xml" then true
+            when "text/xml", "application/rss+xml" then true
             else model.errors.add(att, "is not a valid rss feed")
           end
         else model.errors.add(att, "is not valid or not responding") and false
