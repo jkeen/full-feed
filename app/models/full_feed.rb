@@ -24,7 +24,7 @@ class FullFeed < ActiveRecord::Base
         else model.errors.add(att, "is not valid or not responding") and false
       end
     rescue # Recover on DNS failures..
-      model.errors.add(att, "the connection was lost") and false
+      model.errors.add(att, "is not valid or not responding") and false
     end
   end
 
