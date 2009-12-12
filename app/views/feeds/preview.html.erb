@@ -1,7 +1,7 @@
 <%= render :partial => "input" %>
 <div id="full_feed_preview">
   <p class="feed_url">
-    Everything below look ok?  Here's the <%= link_to("full feed", formatted_load_feeds_url({:format => :rss}.merge(params[:full_feed]))) %>. 
+    Everything below look ok?  Here's the <%= link_to("full feed", load_feeds_url({:format => :rss}.merge(params[:full_feed]))) %>. 
   </p>
   <% @entries.each do |entry| %>
     <h3 class="entry_title"><%= entry.title %></h3>

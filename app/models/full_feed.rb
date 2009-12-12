@@ -30,32 +30,46 @@ class FullFeed < ActiveRecord::Base
 
   attr_accessor :feed
   
+  def initialize(options = {})
+    options[:url] = clean_url(options[:url])
+    super(options)
+  end
+  
   def process(limit = nil)    
     @feed = Feedzirra::Feed.fetch_and_parse(url)
     @feed.entries = @feed.entries.slice(0,limit) if limit
     
     @feed.entries.each do |entry|
-      entry.summary = distill_content(full_content(entry.url))
+      entry.summary = distilled_content
     end
     
     return @feed
   end
   
-  def distill_content(content)
+  def distilled_content
     selectors = self.selectors.split("\r\n").compact
+    selectors = ["body"] if selectors.empty?
     
-    unless selectors.empty?
+    Rails.cache.fetch({:url => self.url, :selectors => self.selectors}.to_param, :expires_in => 30.minutes) do
+      content =full_content(self.url)
+    
       doc = Nokogiri::HTML.parse(content)
-      
       distilled = doc.search(selectors).collect { |selection| selection.to_s }
-      
       distilled.join("")
-    else
-      content
-    end    
+    end
   end
   
   def full_content(url)
-    content = open(url).read
+    # cache the scraped content
+    Rails.cache.fetch(self.url, :expires_in => 30.minutes) do
+      open(url).read
+    end
+  end
+  
+  private
+  
+  def clean_url(url)
+    url = url.gsub(/^\w+:\/\//, "") # no funny stuff, ok?
+    url = "http://#{url}"
   end
 end

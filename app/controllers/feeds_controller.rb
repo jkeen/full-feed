@@ -1,6 +1,6 @@
 require 'open-uri'
 require 'feedzirra'
-class FeedsController < ApplicationController  
+class FeedsController < ApplicationController
   def index
     respond_to do |wants|
       wants.html {}
@@ -9,7 +9,6 @@ class FeedsController < ApplicationController
   
   def load
     @full_feed = FullFeed.new({:url => params[:url], :selectors => params[:selectors]})
-    
     respond_to do |format|
       if @full_feed.valid?
         @full_feed.process
@@ -27,7 +26,8 @@ class FeedsController < ApplicationController
     
     respond_to do |format|
       if @full_feed.valid?
-        @entries = @full_feed.process(2).entries
+        @feed_path = load_feeds_url(:format => :rss, :selectors => @full_feed.selectors, :url => @full_feed.url)
+        @entries = @full_feed.process(10).entries
         format.html { }
       else
         format.html { render :action => :index}
