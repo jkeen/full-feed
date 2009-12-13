@@ -18,7 +18,7 @@ class FullFeed < ActiveRecord::Base
       case response
         when Net::HTTPOK
           case response.content_type
-            when "text/xml", "application/rss+xml" then true
+            when "text/xml", "application/rss+xml", "application/xml" then true
             else model.errors.add(att, "is not a valid rss feed")
           end
         else model.errors.add(att, "is not valid or not responding") and false
@@ -36,24 +36,31 @@ class FullFeed < ActiveRecord::Base
   end
   
   def process(limit = nil)    
-    @feed = Feedzirra::Feed.fetch_and_parse(url)
+    @feed = Feedzirra::Feed.fetch_and_parse(self.url)
     @feed.entries = @feed.entries.slice(0,limit) if limit
     
     @feed.entries.each do |entry|
-      entry.summary = distilled_content
+      entry.summary = content(entry.url, self.selectors)
     end
     
     return @feed
   end
   
-  def distilled_content
-    selectors = self.selectors.split("\r\n").compact
-    selectors = ["body"] if selectors.empty?
-    
-    Rails.cache.fetch({:url => self.url, :selectors => self.selectors}.to_param, :expires_in => 30.minutes) do
-      content =full_content(self.url)
-    
+  private
+  
+  def content(url, selectors)
+    unless (selectors.blank?)
+      distilled_content(url, selectors)
+    else
+      full_content(url)
+    end
+  end
+  
+  def distilled_content(url, selectors = nil)
+    Rails.cache.fetch({:url => url, :selectors => selectors}.to_param, :expires_in => 30.minutes) do
+      content =full_content(url)
       doc = Nokogiri::HTML.parse(content)
+
       distilled = doc.search(selectors).collect { |selection| selection.to_s }
       distilled.join("")
     end
@@ -61,12 +68,10 @@ class FullFeed < ActiveRecord::Base
   
   def full_content(url)
     # cache the scraped content
-    Rails.cache.fetch(self.url, :expires_in => 30.minutes) do
+    Rails.cache.fetch(url, :expires_in => 30.minutes) do
       open(url).read
     end
   end
-  
-  private
   
   def clean_url(url)
     url = url.gsub(/^\w+:\/\//, "") # no funny stuff, ok?

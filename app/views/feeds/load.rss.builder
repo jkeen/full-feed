@@ -3,7 +3,8 @@ xml.instruct! :xml, :version => "1.0"
 xml.rss :version => "2.0" do
   xml.channel do
     xml.title @full_feed.feed.title
-    xml.description "full"
+    xml.link @full_feed.feed.url
+    xml.updated @full_feed.feed.last_modified
     
     @full_feed.feed.entries.each do |entry|
       xml.item do
