@@ -1,7 +1,9 @@
 require 'open-uri'
 require 'feedzirra'
 class FeedsController < ApplicationController
+  caches_page :index
   def index
+    expires_in 2.months
     respond_to do |wants|
       wants.html {}
     end

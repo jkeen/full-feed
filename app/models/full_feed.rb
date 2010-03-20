@@ -15,16 +15,21 @@ class FullFeed < ActiveRecord::Base
   validates_each :url do |model, att, value|
     begin # check header response
       response = Net::HTTP.get_response(URI.parse(value))
+      while response.is_a?(Net::HTTPRedirection)
+        # handle redirects
+        response = Net::HTTP.get_response(URI.parse(response['location']))
+      end
+      
       case response
         when Net::HTTPOK
           case response.content_type
             when "text/xml", "application/rss+xml", "application/xml" then true
             else model.errors.add(att, "is not a valid rss feed")
           end
-        else model.errors.add(att, "is not valid or not responding") and false
+        else model.errors.add(att, "is not valid or is not responding") and false
       end
     rescue # Recover on DNS failures..
-      model.errors.add(att, "is not valid or not responding") and false
+      model.errors.add(att, "is not valid or is not responding") and false
     end
   end
 

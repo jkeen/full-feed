@@ -1,5 +1,5 @@
 <div class = "feed_input">
-  <h1>Full Feed</h1>
+  <h1><%= link_to "Full Feed", "/" %></h1>
   <span class="slogan">Get everything you want in your feed reader.</span>
     
   <% form_for(:full_feed, @full_feed, :url => { :controller => :feeds, :action => :preview }, :html => {:method => :get})  do |f| %>
