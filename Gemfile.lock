@@ -1,0 +1,57 @@
+--- 
+hash: 4bb595753b6642fb75baa65bfa897cc73ff14c6d
+sources: 
+- Rubygems: 
+    uri: http://gemcutter.org
+- Rubygems: 
+    uri: http://gems.github.com
+specs: 
+- rake: 
+    version: 0.8.7
+- activesupport: 
+    version: 2.3.8
+- rack: 
+    version: 1.1.0
+- actionpack: 
+    version: 2.3.8
+- actionmailer: 
+    version: 2.3.8
+- activerecord: 
+    version: 2.3.8
+- activeresource: 
+    version: 2.3.8
+- builder: 
+    version: 2.1.2
+- nokogiri: 
+    version: 1.4.2
+- mdalessio-dryopteris: 
+    version: 0.1.2
+- pauldix-sax-machine: 
+    version: 0.0.14
+- taf2-curb: 
+    version: 0.5.4.0
+- pauldix-feedzirra: 
+    version: 0.0.18
+- rails: 
+    version: 2.3.8
+- sqlite3-ruby: 
+    version: 1.3.0
+dependencies: 
+  rails: 
+    version: ~> 2.3.5
+    group: 
+    - :default
+  nokogiri: 
+    version: ">= 0"
+    group: 
+    - :default
+  pauldix-feedzirra: 
+    version: ">= 0"
+    group: 
+    - :default
+    require: 
+    - feedzirra
+  sqlite3-ruby: 
+    version: ">= 0"
+    group: 
+    - :default

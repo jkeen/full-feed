@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 deploy.rb
+=======
+>>>>>>> dd721c7... Set up bundler for easier deployment.
 Capfile
 .DS_Store
 *.swp
