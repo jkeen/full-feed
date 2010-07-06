@@ -1,0 +1,11 @@
+Capfile
+.DS_Store
+*.swp
+*.db
+log/*
+tmp/*
+.bundle
+vendor/gems/gems/*
+vendor/gems/specifications/*
+vendor/gems/doc/*
+vendor/gems/environment.rb
